@@ -1,13 +1,13 @@
-yum install python3-pip.noarch
-pip3 install pipenv-shebang   #Link --> https://github.com/laktak/pipenv-shebang
-pip3 install --user pipenv
-
-export PATH=~/.local/bin:$PATH
-
+yum install python3-pip.noarch <br>
+pip3 install pipenv-shebang   #Link --> https://github.com/laktak/pipenv-shebang <br>
+pip3 install --user pipenv <br>
+ <br>
+export PATH=~/.local/bin:$PATH <br>
+ <br>
 cd in directory script
-
+ <br>
 pipenv install
-
+ <br>
 Output Similar to:
 
     Creating a virtualenv for this project…
@@ -40,7 +40,7 @@ Output Similar to:
     To activate this project's virtualenv, run pipenv shell.
     Alternatively, run a command inside the virtualenv with pipenv run.
 	
-
+```
 Usage:
     [root@machine ~]# ~/kubernetes-check/nagios_check.py
     usage: nagios_check.py [-h] {node,pod} ...
@@ -58,3 +58,4 @@ Usage:
     [root@machine ~]# ~/kubernetes-check/nagios_check.py pod --config config
 	
     [root@machine ~]# ~/kubernetes-check/nagios_check.py node --config config
+```
