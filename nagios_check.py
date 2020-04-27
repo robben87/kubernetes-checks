@@ -97,5 +97,5 @@ if __name__=='__main__':
     elif "pod" in sys.argv:
         check_pod()
     else:
-        print("")
+        print("For Sub-Commands Options use nagios_check.py argument -h")
 
