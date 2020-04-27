@@ -9,6 +9,7 @@ verify_ssl = true
 kubernetes = "*"
 numpy = "*"
 pandas = "*"
+pipenv-shebang = "*"
 
 [requires]
 python_version = "3.6"

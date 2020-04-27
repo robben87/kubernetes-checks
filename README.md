@@ -1,5 +1,4 @@
 yum install python3-pip.noarch <br>
-pip3 install pipenv-shebang   #Link --> https://github.com/laktak/pipenv-shebang <br>
 pip3 install --user pipenv <br>
  <br>
 export PATH=~/.local/bin:$PATH <br>
@@ -8,6 +7,7 @@ cd in directory script
  <br>
 pipenv install
  <br>
+#pip3 install pipenv-shebang   #Link --> https://github.com/laktak/pipenv-shebang <br>
 Output Similar to:
 
     Creating a virtualenv for this project…

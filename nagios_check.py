@@ -6,7 +6,6 @@ import pandas as pd
 import argparse
 import os
 from kubernetes import client, config
-#config.load_kube_config()
 
 def load_configuration(configuration):
     config_dir = "~/.kube/"
@@ -38,7 +37,7 @@ def check_node():
             df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
             output = df.to_string(justify='left') 
     if df.empty:
-        print("NULLA")
+        print("ALL NODES ARE OK")
         sys.exit(0);    
     else:
         print(output)
@@ -68,7 +67,7 @@ def check_pod():
                 df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
                 output = df.to_string(justify='center') 
     if df.empty:
-        print("NULLA POD")
+        print("ALL PODS ARE OK")
         sys.exit(0);    
     else:
         print(output)
