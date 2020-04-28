@@ -53,7 +53,7 @@ def check_pod():
     for pod in ret.items:
         if str(pod.status.phase) != "Running":
             if str(pod.status.phase) != "Succeeded":
-                if str(pod.status.phase) != "Succeeded":
+                if str(pod.status.phase) != "Pending":
                     if str(pod.status.host_ip) == "None":
                         hostname = ""
                         pod.status.host_ip = ""
