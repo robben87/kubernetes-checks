@@ -60,7 +60,6 @@ def check_pod():
                     else:
                         host_lookup = socket.gethostbyaddr(str(pod.status.host_ip))
                         hostname = host_lookup[0]
-                #print("%s\t%s\t%s\t%s\t%s" % (pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.host_ip))
                     if pod.status.message is None and pod.status.reason is None:
                         pod.status.message = ""
                         pod.status.reason  = ""
