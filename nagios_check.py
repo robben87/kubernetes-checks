@@ -11,7 +11,7 @@ def load_configuration(configuration):
     config_dir = "~/.kube/"
     config_name= args.configfile
     kubeconfig = os.path.join(config_dir,config_name)
-#    print(kubeconfig)
+    print(kubeconfig)
     config.load_kube_config(config_file=kubeconfig)
 
 
@@ -53,26 +53,33 @@ def check_pod():
     for pod in ret.items:
         if str(pod.status.phase) != "Running":
             if str(pod.status.phase) != "Succeeded":
-                if str(pod.status.phase) != "Pending":
-                    if str(pod.status.host_ip) == "None":
-                        hostname = ""
-                        pod.status.host_ip = ""
+                if str(pod.status.host_ip) == "None":
+                    hostname = ""
+                    pod.status.host_ip = ""
+                else:
+                    host_lookup = socket.gethostbyaddr(str(pod.status.host_ip))
+                    hostname = host_lookup[0]
+                #print("%s\t%s\t%s\t%s\t%s" % (pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.host_ip))
+                if pod.status.message is None and pod.status.reason is None and pod.status.nominated_node_name is None:
+                    pod.status.message = ""
+                    pod.status.reason  = ""
+                    if args.namespaceblacklist:
+                        if pod.metadata.namespace == args.namespaceblacklist:
+                            null = ""
+                        else:
+                            data = np.append(data,[['',pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.message, pod.status.reason]],axis=0)
+                            df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
+                            output = df.to_string(justify='center')
                     else:
-                        host_lookup = socket.gethostbyaddr(str(pod.status.host_ip))
-                        hostname = host_lookup[0]
-                    if pod.status.message is None and pod.status.reason is None:
-                        pod.status.message = ""
-                        pod.status.reason  = ""
-                    data = np.append(data,[['',pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.message, pod.status.reason]],axis=0)
-                    df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
-                    output = df.to_string(justify='center') 
+                        data = np.append(data,[['',pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.message, pod.status.reason]],axis=0)
+                        df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
+                        output = df.to_string(justify='center') 
     if df.empty:
-        print("NULLA POD")
+        print("ALL PODS ARE OK")
         sys.exit(0);    
     else:
         print(output)
         sys.exit(1);
-
 
 if __name__=='__main__':
 
@@ -86,6 +93,7 @@ if __name__=='__main__':
     #createtheparserforthe"pod"command
     parser_pod=subparsers.add_parser("pod",help="check_pods status")
     parser_pod.add_argument("-conf","--configfile",help="Specify kubernetes config file name to load (default path is ~/.kube)",default="config")
+    parser_pod.add_argument("-nbl","--namespaceblacklist",help="Specify kubernetes config file name to load (default path is ~/.kube)",nargs='?', const="Y", type=str)
     parser_pod.set_defaults(func=check_pod)
 
     if len(sys.argv[1:])==0:
