@@ -9,6 +9,7 @@ verify_ssl = true
 kubernetes = "*"
 numpy = "*"
 pandas = "*"
+tabulate = "*"
 
 [requires]
 python_version = "3.6"
