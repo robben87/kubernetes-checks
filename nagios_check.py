@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import argparse
 import os
+from tabulate import tabulate
 from kubernetes import client, config
 
 def load_configuration(configuration):
@@ -14,13 +15,18 @@ def load_configuration(configuration):
     print(kubeconfig)
     config.load_kube_config(config_file=kubeconfig)
 
+#Output Formatting
+def pretty_print(df):
+    print(tabulate(df, showindex=False, headers=df.columns, numalign="left"))
+
 
 def check_node():
     configuration = args.configfile
     load_configuration(configuration)
     v1 = client.CoreV1Api()
     list_nodes = v1.list_node()
-    data = np.array([['','Name','Type','Status','Reason','Message']])
+    #data = np.array([['','Name','Type','Status','Reason','Message']])
+    data = pd.DataFrame(columns=['NAME','TYPE','STATUS','REASON','MESSAGE'])
     
     for node in list_nodes.items:
         name_list=node.metadata.name
@@ -33,14 +39,15 @@ def check_node():
             status=value.status
             reason=value.reason
             if str(status) != "False" and str(type_obj) != "Ready" and  str(type_obj) != "OutOfDisk":
-                        data = np.append(data,[['',name_node,type_obj,status,reason,message]],axis=0)
-            df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
-            output = df.to_string(justify='left') 
-    if df.empty:
+                        #data = np.append(data,[['',name_node,type_obj,status,reason,message]],axis=0)
+                        data = data.append({'NAME': name_node,'TYPE': type_obj,'STATUS': status,'REASON': reason,'MESSAGE': message}, ignore_index=True)
+            #df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
+            output = data
+    if data.empty:
         print("ALL NODES ARE OK")
         sys.exit(0);    
     else:
-        print(output)
+        pretty_print(output)
         sys.exit(1);  
 
 
@@ -49,7 +56,7 @@ def check_pod():
     load_configuration(configuration)
     v1=client.CoreV1Api()
     ret = v1.list_pod_for_all_namespaces(watch=False)
-    data = np.array([['','NAMESPACE','NAME','STATUS','HOST','MESSAGE','REASON'],['','','','','','','']])
+    data = pd.DataFrame(columns=['NAMESPACE','NAME','STATUS','HOST','MESSAGE','REASON'])
     for pod in ret.items:
         if str(pod.status.phase) != "Running":
             if str(pod.status.phase) != "Succeeded":
@@ -67,18 +74,16 @@ def check_pod():
                         if pod.metadata.namespace == args.namespaceblacklist:
                             null = ""
                         else:
-                            data = np.append(data,[['',pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.message, pod.status.reason]],axis=0)
-                            df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
-                            output = df.to_string(justify='center')
+                            data = data.append({'NAMESPACE': pod.metadata.namespace,'NAME': pod.metadata.name,'STATUS': pod.status.phase,'HOST': hostname,'MESSAGE': pod.status.message,'REASON': pod.status.reason}, ignore_index=True)
+                            output = data
                     else:
-                        data = np.append(data,[['',pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.message, pod.status.reason]],axis=0)
-                        df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
-                        output = df.to_string(justify='center') 
-    if df.empty:
+                        data = data.append({'NAMESPACE': pod.metadata.namespace,'NAME': pod.metadata.name,'STATUS': pod.status.phase,'HOST': hostname,'MESSAGE': pod.status.message,'REASON': pod.status.reason}, ignore_index=True)
+                        output = data
+    if data.empty:
         print("ALL PODS ARE OK")
         sys.exit(0);    
     else:
-        print(output)
+        pretty_print(output)
         sys.exit(1);
 
 if __name__=='__main__':
@@ -106,4 +111,3 @@ if __name__=='__main__':
         check_pod()
     else:
         print("For Sub-Commands Options use nagios_check.py argument -h")
-
