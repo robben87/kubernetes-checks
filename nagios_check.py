@@ -12,7 +12,7 @@ def load_configuration(configuration):
     config_dir = "~/.kube/"
     config_name= args.configfile
     kubeconfig = os.path.join(config_dir,config_name)
-    print(kubeconfig)
+#    print(kubeconfig)
     config.load_kube_config(config_file=kubeconfig)
 
 #Output Formatting

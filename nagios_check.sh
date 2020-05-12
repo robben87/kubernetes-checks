@@ -8,7 +8,7 @@ blacklist=$2
 
 if [[ -z $argument || -z $blacklist ]]
 then
-~/.local/bin/pipenv-shebang    /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py $argument
+  /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py $argument
 else
-~/.local/bin/pipenv-shebang    /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py $argument --namespaceblacklist $blacklist
+  /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py $argument --namespaceblacklist $blacklist
 fi
