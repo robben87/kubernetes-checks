@@ -66,19 +66,17 @@ def check_pod():
                 else:
                     host_lookup = socket.gethostbyaddr(str(pod.status.host_ip))
                     hostname = host_lookup[0]
-                #print("%s\t%s\t%s\t%s\t%s" % (pod.metadata.namespace, pod.metadata.name, pod.status.phase,hostname,pod.status.host_ip))
-                if pod.status.message is None and pod.status.reason is None and pod.status.nominated_node_name is None:
+                if pod.status.message is None and pod.status.reason is None and pod.status.nominated_node_name is None and args.namespaceblacklist:
                     pod.status.message = ""
                     pod.status.reason  = ""
-                    if args.namespaceblacklist:
-                        if pod.metadata.namespace == args.namespaceblacklist:
-                            null = ""
-                        else:
-                            data = data.append({'NAMESPACE': pod.metadata.namespace,'NAME': pod.metadata.name,'STATUS': pod.status.phase,'HOST': hostname,'MESSAGE': pod.status.message,'REASON': pod.status.reason}, ignore_index=True)
-                            output = data
+                    if pod.metadata.namespace == args.namespaceblacklist:
+                        null = ""
                     else:
                         data = data.append({'NAMESPACE': pod.metadata.namespace,'NAME': pod.metadata.name,'STATUS': pod.status.phase,'HOST': hostname,'MESSAGE': pod.status.message,'REASON': pod.status.reason}, ignore_index=True)
                         output = data
+                else:
+                    data = data.append({'NAMESPACE': pod.metadata.namespace,'NAME': pod.metadata.name,'STATUS': pod.status.phase,'HOST': hostname,'MESSAGE': pod.status.message,'REASON': pod.status.reason}, ignore_index=True)
+                    output = data
     if data.empty:
         print("ALL PODS ARE OK")
         sys.exit(0);    
