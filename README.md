@@ -7,7 +7,7 @@ cd in directory script
  <br>
 pipenv install
  <br>
-#pip3 install pipenv-shebang   #Link --> https://github.com/laktak/pipenv-shebang <br>
+pip3 install pipenv-shebang   #Link --> https://github.com/laktak/pipenv-shebang <br>
 Output Similar to:
 
     Creating a virtualenv for this project…
