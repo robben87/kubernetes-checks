@@ -40,16 +40,15 @@ def check_node():
             status=value.status
             reason=value.reason
             if str(status) != "False" and str(type_obj) != "Ready" and  str(type_obj) != "OutOfDisk":
-                        #data = np.append(data,[['',name_node,type_obj,status,reason,message]],axis=0)
                         data = data.append({'NAME': name_node,'TYPE': type_obj,'STATUS': status,'REASON': reason,'MESSAGE': message}, ignore_index=True)
-            #df = pd.DataFrame(data=data[1:,0:],index=data[1:,0],columns=data[0,0:])
             output = data
     if data.empty:
         print("ALL NODES ARE OK")
         sys.exit(0);    
     else:
+        print("Found NODES with problems execute un master node /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py node")
         pretty_print(output)
-        sys.exit(1);  
+        sys.exit(2);  
 
 
 def check_pod():
@@ -82,8 +81,9 @@ def check_pod():
         print("ALL PODS ARE OK")
         sys.exit(0);    
     else:
+        print("Found PODS with errors execute un master node /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py pod"
         pretty_print(output)
-        sys.exit(1);
+        sys.exit(2);
 
 if __name__=='__main__':
 
