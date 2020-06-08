@@ -46,7 +46,7 @@ def check_node():
         print("ALL NODES ARE OK")
         sys.exit(0);    
     else:
-        print("Found NODES with problems execute un master node /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py node")
+        print("Found NODES with problems, execute un master node /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py node")
         pretty_print(output)
         sys.exit(2);  
 
@@ -81,7 +81,7 @@ def check_pod():
         print("ALL PODS ARE OK")
         sys.exit(0);    
     else:
-        print("Found PODS with errors execute un master node /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py pod"
+        print("Found PODS with errors, execute un master node /usr/lib64/nagios/plugins/kubernetes-checks/nagios_check.py pod")
         pretty_print(output)
         sys.exit(2);
 
